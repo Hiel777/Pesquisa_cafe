@@ -1,0 +1,80 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import statistics
+import tkinter as tk
+from tkinter import messagebox
+
+# Dados da pesquisa
+frequencia_cafe = {"Diariamente": 24, "Raramente": 14, "Segunda a Sexta": 1, "Finais de Semana": 1}
+tipo_cafe = {"Com açúcar": 20, "Sem açúcar e com leite": 8, "Expresso": 3, "Com adoçante artificial": 1}
+horario_consumo = {"Qualquer horário": 20, "Pela manhã": 17, "À noite": 3}
+razao_consumo = {"Costume diário": 20, "Prazer/Relaxamento": 11, "Aumentar energia": 20, "Socializar": 2}
+
+# Função para calcular média, moda e mediana
+def calcular_estatisticas(dados):
+    valores = list(dados.values())
+    media = np.mean(valores)
+    mediana = np.median(valores)
+    moda = statistics.mode(valores)
+    return media, moda, mediana
+
+# Estatísticas para cada pergunta
+estatisticas_frequencia = calcular_estatisticas(frequencia_cafe)
+estatisticas_tipo_cafe = calcular_estatisticas(tipo_cafe)
+estatisticas_horario = calcular_estatisticas(horario_consumo)
+estatisticas_razao = calcular_estatisticas(razao_consumo)
+
+# Função para exibir a interface com as estatísticas
+def exibir_estatisticas():
+    root = tk.Tk()
+    root.title("Estatísticas da Pesquisa")
+
+    # Criar um frame de texto para exibir as estatísticas
+    texto = tk.Text(root, height=12, width=50)
+    texto.pack()
+
+    # Adicionar as estatísticas formatadas no texto
+    texto.insert(tk.END, "1. Com que frequência você toma café?\n")
+    texto.insert(tk.END, f"   Média: {estatisticas_frequencia[0]:.2f}, Moda: {estatisticas_frequencia[1]}, Mediana: {estatisticas_frequencia[2]:.2f}\n\n")
+    
+    texto.insert(tk.END, "2. Qual tipo de café você mais toma?\n")
+    texto.insert(tk.END, f"   Média: {estatisticas_tipo_cafe[0]:.2f}, Moda: {estatisticas_tipo_cafe[1]}, Mediana: {estatisticas_tipo_cafe[2]:.2f}\n\n")
+    
+    texto.insert(tk.END, "3. Qual é o horário do dia que você consome café com mais frequência?\n")
+    texto.insert(tk.END, f"   Média: {estatisticas_horario[0]:.2f}, Moda: {estatisticas_horario[1]}, Mediana: {estatisticas_horario[2]:.2f}\n\n")
+    
+    texto.insert(tk.END, "4. Qual a principal razão para você consumir café?\n")
+    texto.insert(tk.END, f"   Média: {estatisticas_razao[0]:.2f}, Moda: {estatisticas_razao[1]}, Mediana: {estatisticas_razao[2]:.2f}\n\n")
+
+    # Impedir que o usuário edite o texto
+    texto.config(state=tk.DISABLED)
+
+    # Executar a interface
+    root.mainloop()
+
+# Gráficos de pizza
+fig, axs = plt.subplots(2, 2, figsize=(12, 10))
+
+# Frequência
+axs[0, 0].pie(frequencia_cafe.values(), labels=frequencia_cafe.keys(), autopct='%1.1f%%', startangle=90)
+axs[0, 0].set_title('Frequência que Consomem Café')
+
+# Tipo de café
+axs[0, 1].pie(tipo_cafe.values(), labels=tipo_cafe.keys(), autopct='%1.1f%%', startangle=90)
+axs[0, 1].set_title('Tipo de Café Mais Consumido')
+
+# Horário
+axs[1, 0].pie(horario_consumo.values(), labels=horario_consumo.keys(), autopct='%1.1f%%', startangle=90)
+axs[1, 0].set_title('Horário de Consumo de Café')
+
+# Razão para o consumo
+axs[1, 1].pie(razao_consumo.values(), labels=razao_consumo.keys(), autopct='%1.1f%%', startangle=90)
+axs[1, 1].set_title('Razão para Consumo de Café')
+
+plt.tight_layout()
+
+# Mostrar o gráfico e depois exibir as estatísticas
+plt.show()
+
+# Exibir as estatísticas após o gráfico ser fechado
+exibir_estatisticas()
